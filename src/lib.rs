@@ -15,7 +15,6 @@ pub struct Case<A, C> {
     pub predicted_class: C,
 }
 
-
 pub fn interpret<'c, A: PartialEq, C>(
     cases: &'c Vec<Case<A, C>>,
     attribute_value: &A,
@@ -66,7 +65,7 @@ pub fn evaluate<A: PartialEq, C: PartialEq>(
 ///
 /// The result is a tuple containing the column index the best rule applies to,
 /// and the `Rule` itself.
-/// 
+///
 /// The `Rule` consists of:
 /// - the attribute index (from zero) that the rule works for; and
 /// - the `Case`s for that attribute.
