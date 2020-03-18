@@ -6,4 +6,4 @@ edition = "2018"
 
 [dependencies]
 ndarray = "0.13.0"
-itertools = "0.9.0" // for unique()
+itertools = "0.9.0"
