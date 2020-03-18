@@ -55,9 +55,6 @@ pub fn evaluate<A: PartialEq, C: PartialEq>(
     }
 }
 
-// oner-discovery (induction?)
-// oner-quantize
-
 /// Find the one rule that fits a set of example data points.
 ///
 /// # Arguments
@@ -80,7 +77,7 @@ pub fn evaluate<A: PartialEq, C: PartialEq>(
 ///
 /// ```
 /// use ndarray::prelude::*;
-/// use oner::{Rule, Case, Accuracy, discover};
+/// use oner_induction::{Rule, Case, Accuracy, discover};
 ///
 /// let examples = array![
 ///    ["sunny", "summer"],
