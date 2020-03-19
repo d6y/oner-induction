@@ -23,42 +23,6 @@ use std::hash::Hash;
 ///
 /// A `Case` is a value for the attribute and the corresponding predicted class.
 ///
-/// # Examples
-///
-/// ```
-/// use ndarray::prelude::*;
-/// use oner_induction::{Rule, Case, Accuracy, discover};
-///
-/// let examples = array![
-///    ["sunny", "summer"],
-///    ["sunny", "summer"],
-///    ["cloudy", "winter"],
-///    ["sunny", "winter"]
-/// ];
-///
-///
-/// let classes = array![
-///     "hot",
-///     "hot",
-///     "cold",
-///     "cold"
-/// ];
-///
-///
-/// let rule: Option<(usize, Rule<&str, &str>)> =
-///   discover(&examples.view(), &classes.view());
-///
-/// // We the rule to be:
-/// let accuracy = Accuracy(1.0);
-///
-/// let cases = vec![
-///     Case { attribute_value: "summer", predicted_class: "hot" },
-///     Case { attribute_value: "winter", predicted_class: "cold" }
-/// ];
-///
-/// // Column 1 is the Season (winter or summer)
-/// assert_eq!(rule, Some( (1, Rule { cases, accuracy }) ));
-/// ```
 pub fn discover<A, C>(
     attributes: &ArrayView<A, Ix2>,
     classes: &ArrayView<C, Ix1>,
@@ -71,9 +35,7 @@ where
 
     // Find the best rule (highest accuracy), and the column number it applies to:
     rules.into_iter().enumerate().max_by(|(_i, a), (_j, b)| {
-        a.accuracy
-            .partial_cmp(&b.accuracy)
-            .unwrap_or(std::cmp::Ordering::Equal)
+        a.accuracy.partial_cmp(&b.accuracy).unwrap_or(std::cmp::Ordering::Equal)
     })
 }
 
@@ -109,18 +71,9 @@ mod test {
 
         let expected_rule = Rule {
             cases: vec![
-                Case {
-                    attribute_value: "small",
-                    predicted_class: "low",
-                },
-                Case {
-                    attribute_value: "big",
-                    predicted_class: "high",
-                },
-                Case {
-                    attribute_value: "medium",
-                    predicted_class: "medium",
-                },
+                Case { attribute_value: "small", predicted_class: "low" },
+                Case { attribute_value: "big", predicted_class: "high" },
+                Case { attribute_value: "medium", predicted_class: "medium" },
             ],
             accuracy: Accuracy(0.7),
         };
@@ -175,25 +128,18 @@ where
     for v in unique_values {
         // Count the number of times we see each class:
         let mut class_count: HashMap<&C, i32> = HashMap::new();
-        Zip::from(attribute_values)
-            .and(classes)
-            .apply(|attribute_value, class| {
-                if attribute_value == v {
-                    *class_count.entry(class).or_insert(0) += 1;
-                }
-            });
+        Zip::from(attribute_values).and(classes).apply(|attribute_value, class| {
+            if attribute_value == v {
+                *class_count.entry(class).or_insert(0) += 1;
+            }
+        });
 
         // The most frequent class is the preidction for the attribute value, v
-        let maybe_most_frequent_class = class_count
-            .into_iter()
-            .max_by_key(|&(_, count)| count)
-            .map(|(class, _)| class);
+        let maybe_most_frequent_class =
+            class_count.into_iter().max_by_key(|&(_, count)| count).map(|(class, _)| class);
 
         if let Some(class) = maybe_most_frequent_class {
-            cases.push(Case {
-                attribute_value: v.to_owned(),
-                predicted_class: class.to_owned(),
-            });
+            cases.push(Case { attribute_value: v.to_owned(), predicted_class: class.to_owned() });
         }
     }
 

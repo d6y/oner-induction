@@ -8,7 +8,6 @@ use ndarray::{ArrayView, Ix1, Zip};
 /// ```
 /// use oner_induction::{Case, interpret};
 ///
-///
 /// let cases = vec![
 ///     Case { attribute_value: "summer", predicted_class: "hot" },
 ///     Case { attribute_value: "winter", predicted_class: "cold" },
@@ -27,9 +26,9 @@ pub fn interpret<'c, A: PartialEq, C>(
         .map(|case| &case.predicted_class)
 }
 
-// Evaluate cases (a.k.a., a rule) against a data set, to get a performance accuracy.
-//
-// Accuracy is defined as the number of correct predictions over the number of rows.
+/// Evaluate cases (a.k.a., a rule) against a data set, to get a performance accuracy.
+///
+/// Accuracy is defined as the number of correct predictions over the number of rows.
 pub fn evaluate<A: PartialEq, C: PartialEq>(
     cases: &[Case<A, C>],
     attribute_values: &ArrayView<A, Ix1>,
@@ -37,14 +36,12 @@ pub fn evaluate<A: PartialEq, C: PartialEq>(
 ) -> Accuracy {
     let mut right_wrong: Vec<Option<bool>> = Vec::new();
 
-    Zip::from(attribute_values)
-        .and(classes)
-        .apply(
-            |attribute_value, class| match interpret(cases, attribute_value) {
-                None => right_wrong.push(None),
-                Some(predicted) => right_wrong.push(Some(predicted == class)),
-            },
-        );
+    Zip::from(attribute_values).and(classes).apply(|attribute_value, class| {
+        match interpret(cases, attribute_value) {
+            None => right_wrong.push(None),
+            Some(predicted) => right_wrong.push(Some(predicted == class)),
+        }
+    });
 
     let num_examples = classes.len();
 
