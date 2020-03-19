@@ -5,12 +5,16 @@
 //! The algorithm generates a rule for each attribute in a dataset,
 //! and then picks the "one rule" that has the best accuracy.
 //!
-//! Each rule (hypothesis) is: for every value of the attribute,
-//! the prediction (the `then` part) is the most frequent class (that has the attribute value).
+//! Each rule (hypothesis) is a set of cases:
+//! for every value of the attribute,
+//! the prediction (the `then` part) is the most frequent class for examples with that attribute value.
 //!
+//! This is a baseline learner for use in comparison against more sophisticated algorithms.
 //! A related idea is "0R" (zero rule), which is the most frequent class in the dataset.
 //!
 //! # Examples
+//!
+//! This crate uses [ndarray](https://docs.rs/ndarray/0.13.0/ndarray/) to represent attributes and classes.
 //!
 //! ```
 //! use ndarray::prelude::*;
@@ -49,10 +53,10 @@
 //!
 //! # References
 //!
-//! - Holte, R.C. _Machine Learning_ (1993) 11: 63. [https://doi.org/10.1023/A:1022631118932](https://doi.org/10.1023/A:1022631118932).
-//! - Molnar, C, _Interpretable Machine Learning_ (2019). In particular: [Learn Rules from a Single Feature (OneR)](https://christophm.github.io/interpretable-ml-book/rules.html#learn-rules-from-a-single-feature-oner).
+//! - Holte, R.C. (1993) Very Simple Classification Rules Perform Well on Most Commonly Used Datasets. _Machine Learning_ 11: 63. [https://doi.org/10.1023/A:1022631118932](https://doi.org/10.1023/A:1022631118932).
+//! - Molnar, C, (2019) _Interpretable Machine Learning_. In particular: [Learn Rules from a Single Feature (OneR)](https://christophm.github.io/interpretable-ml-book/rules.html#learn-rules-from-a-single-feature-oner).
 //!
-//! ## Terminology
+//! # Terminology
 //!
 //! I'm following the terminology from Holte (1993):
 //!
@@ -62,6 +66,12 @@
 //! - Example (instance)
 //!
 //! In generic parameters, `A` is for attribute and `C` is for class.
+//!
+//! # Limitations
+//!
+//! This crate assumes numeric data has already been converted to categorical data.
+//! 1R does include a qualitzation algorithm, which is WIP at <https://github.com/d6y/oner_quantize>
+//!
 
 use std::hash::Hash;
 
