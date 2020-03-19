@@ -1,9 +1,9 @@
-use itertools::Itertools;
-use std::collections::HashMap;
-use ndarray::{ArrayView, Ix1, Ix2, Zip};
-use std::hash::Hash;
-use super::{Rule, Case};
 use super::evaluation::evaluate;
+use super::{Case, Rule};
+use itertools::Itertools;
+use ndarray::{ArrayView, Ix1, Ix2, Zip};
+use std::collections::HashMap;
+use std::hash::Hash;
 
 /// Find the one rule that fits a set of example data points.
 ///
@@ -44,7 +44,7 @@ use super::evaluation::evaluate;
 ///     "cold"
 /// ];
 ///
-/// 
+///
 /// let rule: Option<(usize, Rule<&str, &str>)> =
 ///   discover(&examples.view(), &classes.view());
 ///
@@ -69,13 +69,12 @@ where
 {
     let rules: Vec<Rule<A, C>> = generate_hypotheses(attributes, classes);
 
-    let best_rule_and_index = rules.into_iter().enumerate().max_by(|(_i, a), (_j, b)| {
+    // Find the best rule (highest accuracy), and the column number it applies to:
+    rules.into_iter().enumerate().max_by(|(_i, a), (_j, b)| {
         a.accuracy
             .partial_cmp(&b.accuracy)
             .unwrap_or(std::cmp::Ordering::Equal)
-    });
-
-    best_rule_and_index
+    })
 }
 
 #[cfg(test)]
@@ -88,7 +87,7 @@ mod test {
         let attributes = array![
             // Data from: Christoph Molnar's "Interpretable Machine Learning",
             // licensed under https://creativecommons.org/licenses/by-nc-sa/4.0/
-            // location,size,pets
+            // rental property attributes: location,size,pets
             ["good", "small", "yes"],
             ["good", "big", "no"],
             ["good", "big", "no"],
@@ -101,6 +100,7 @@ mod test {
             ["bad", "small", "no"],
         ];
 
+        // rental property value:
         let classes = array![
             "high", "high", "high", "medium", "medium", "medium", "medium", "low", "low", "low",
         ];
@@ -109,14 +109,23 @@ mod test {
 
         let expected_rule = Rule {
             cases: vec![
-                Case { attribute_value: "small", predicted_class: "low" }, 
-                Case { attribute_value: "big", predicted_class: "high" }, 
-                Case { attribute_value: "medium", predicted_class: "medium" }
-            ], 
-            accuracy: Accuracy(0.7)
+                Case {
+                    attribute_value: "small",
+                    predicted_class: "low",
+                },
+                Case {
+                    attribute_value: "big",
+                    predicted_class: "high",
+                },
+                Case {
+                    attribute_value: "medium",
+                    predicted_class: "medium",
+                },
+            ],
+            accuracy: Accuracy(0.7),
         };
 
-        assert_eq!(rule, Some( (1, expected_rule) ));
+        assert_eq!(rule, Some((1, expected_rule)));
     }
 }
 

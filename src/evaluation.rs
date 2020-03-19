@@ -1,24 +1,24 @@
+use super::{Accuracy, Case};
 use ndarray::{ArrayView, Ix1, Zip};
-use super::{Case, Accuracy};
 
 /// Apply a set of cases to an attribute value to get a prediction.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```
 /// use oner_induction::{Case, interpret};
-/// 
-/// 
+///
+///
 /// let cases = vec![
 ///     Case { attribute_value: "summer", predicted_class: "hot" },
 ///     Case { attribute_value: "winter", predicted_class: "cold" },
 /// ];
-/// 
+///
 /// assert_eq!( Some(&"hot"), interpret(&cases, &"summer"));
 /// assert_eq!( None, interpret(&cases, &"spring"));
-/// ``` 
+/// ```
 pub fn interpret<'c, A: PartialEq, C>(
-    cases: &'c Vec<Case<A, C>>,
+    cases: &'c [Case<A, C>],
     attribute_value: &A,
 ) -> Option<&'c C> {
     cases
@@ -31,7 +31,7 @@ pub fn interpret<'c, A: PartialEq, C>(
 //
 // Accuracy is defined as the number of correct predictions over the number of rows.
 pub fn evaluate<A: PartialEq, C: PartialEq>(
-    cases: &Vec<Case<A, C>>,
+    cases: &[Case<A, C>],
     attribute_values: &ArrayView<A, Ix1>,
     classes: &ArrayView<C, Ix1>,
 ) -> Accuracy {
