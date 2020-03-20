@@ -9,6 +9,7 @@ repository = "https://github.com/d6y/oner_induction"
 readme = "README.md"
 keywords = ["machine-learning", "data-science", "rules"]
 categories = ["science"]
+exclude = [".github/"]
 
 [dependencies]
 ndarray = "0.13"
