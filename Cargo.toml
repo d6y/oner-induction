@@ -1,6 +1,6 @@
 [package]
 name = "oner_induction"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Richard Dallaway <richard@dallaway.com>"]
 edition = "2018"
 description = "An implementation of the 1R rule induction algorithm"
@@ -14,3 +14,4 @@ exclude = [".github/"]
 [dependencies]
 ndarray = "0.13"
 itertools = "0.9"
+rustc-hash = "1.1.0"

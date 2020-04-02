@@ -6,8 +6,9 @@ use super::evaluation::evaluate;
 use super::{Case, Rule};
 use itertools::Itertools;
 use ndarray::{ArrayView, Ix1, Ix2, Zip};
+use rustc_hash::FxHasher;
 use std::collections::HashMap;
-use std::hash::Hash;
+use std::hash::{BuildHasherDefault, Hash};
 
 /// Find the one rule that fits a set of example data points.
 ///
@@ -130,8 +131,8 @@ where
     let unique_values = attribute_values.iter().unique();
 
     for v in unique_values {
-        // Count the number of times we see each class:
-        let mut class_count: HashMap<&C, i32> = HashMap::new();
+        // Count the number of times we see each class, using deterministic hasher for reproducabiltiy with tied results
+        let mut class_count = HashMap::with_hasher(BuildHasherDefault::<FxHasher>::default());
         Zip::from(attribute_values).and(classes).apply(|attribute_value, class| {
             if attribute_value == v {
                 *class_count.entry(class).or_insert(0) += 1;
