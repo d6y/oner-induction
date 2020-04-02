@@ -74,7 +74,8 @@
 //! # Limitations
 //!
 //! This crate assumes numeric data has already been converted to categorical data.
-//! 1R does include a qualitzation algorithm, which is WIP at <https://github.com/d6y/oner_quantize>
+//!
+//! See <https://docs.rs/oner_quantize> for an implementation of the 1R qualitzation algorithm.
 //!
 
 use std::hash::Hash;
