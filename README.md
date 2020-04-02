@@ -6,12 +6,15 @@ Re-implementing the 1R algorithm described in [Holte (1993)](https://link.spring
 
 1R learns a rule (`IF...THEN...ELSE`) based on one attribute (feature) of the database. This gives a baseline performance for comparing with other algorithms.
 
+This crate is a complement to <https://crates.io/crates/oner_quantize>, a 1R rule induction implementation.
+
 # Documentation and examples
 
 - [API reference and usage](https://docs.rs/oner_induction)
 - An example application: <https://github.com/d6y/oner>
 
-# Licence
+
+# License
 
 Copyright 2020 Richard Dallaway
 
