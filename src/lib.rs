@@ -22,7 +22,7 @@
 //!
 //! ```
 //! use ndarray::prelude::*;
-//! use oner_induction::{Rule, Case, Accuracy, discover};
+//! use oner_induction::{Rule, Case, Performance, discover};
 //!
 //! let examples = array![
 //!    ["sunny", "summer"],
@@ -43,7 +43,9 @@
 //!   discover(&examples.view(), &classes.view());
 //!
 //! // Expected accuracy is 100%
-//! let accuracy = Accuracy(1.0);
+//! let performance = Performance {
+//!   accuracy: 1.0,
+//! };
 //!
 //! // The "rule" is a set of cases (conditions, or "IF...THENs"):
 //! let cases = vec![
@@ -52,7 +54,7 @@
 //! ];
 //!
 //! // Column 1 is the Season (winter or summer)
-//! assert_eq!(rule, Some( (1, Rule { cases, accuracy }) ));
+//! assert_eq!(rule, Some( (1, Rule { cases, performance }) ));
 //! ```
 //!
 //! # References
@@ -95,13 +97,16 @@ pub struct Rule<A, C> {
     /// The conditions and actions (IF...THENs) for an attribute.
     pub cases: Vec<Case<A, C>>,
 
-    /// The accuracy of the rule set on the training data used to discover it.
-    pub accuracy: Accuracy,
+    /// Measurement of the rule set on the training data used to discover it.
+    pub performance: Performance,
 }
 
-/// Fraction of correct predictions out of all rows in the training data.
+/// Measurements of the performance of the rule.
 #[derive(Debug, PartialEq, PartialOrd)]
-pub struct Accuracy(pub f64);
+pub struct Performance {
+    /// Fraction of correct predictions out of all rows in the data.
+    pub accuracy: f64,
+}
 
 mod induction;
 pub use induction::discover;

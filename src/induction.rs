@@ -40,14 +40,17 @@ where
 
     // Find the best rule (highest accuracy), and the column number it applies to:
     rules.into_iter().enumerate().max_by(|(_i, a), (_j, b)| {
-        a.accuracy.partial_cmp(&b.accuracy).unwrap_or(std::cmp::Ordering::Equal)
+        a.performance
+            .accuracy
+            .partial_cmp(&b.performance.accuracy)
+            .unwrap_or(std::cmp::Ordering::Equal)
     })
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::Accuracy;
+    use crate::Performance;
     use ndarray::prelude::*;
     #[test]
     fn test1() {
@@ -80,7 +83,7 @@ mod test {
                 Case { attribute_value: "big", predicted_class: "high" },
                 Case { attribute_value: "medium", predicted_class: "medium" },
             ],
-            accuracy: Accuracy(0.7),
+            performance: Performance { accuracy: 0.7 },
         };
 
         assert_eq!(rule, Some((1, expected_rule)));
@@ -148,7 +151,7 @@ where
         }
     }
 
-    let accuracy = evaluate(&cases, attribute_values, classes);
+    let performance = evaluate(&cases, attribute_values, classes);
 
-    Rule { cases, accuracy }
+    Rule { cases, performance }
 }

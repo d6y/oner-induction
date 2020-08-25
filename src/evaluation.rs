@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-use super::{Accuracy, Case};
+use super::{Case, Performance};
 use ndarray::{ArrayView, Ix1, Zip};
 
 /// Apply a set of cases to an attribute value to get a prediction.
@@ -37,7 +37,7 @@ pub fn evaluate<A: PartialEq, C: PartialEq>(
     cases: &[Case<A, C>],
     attribute_values: &ArrayView<A, Ix1>,
     classes: &ArrayView<C, Ix1>,
-) -> Accuracy {
+) -> Performance {
     let mut right_wrong: Vec<Option<bool>> = Vec::new();
 
     Zip::from(attribute_values).and(classes).apply(|attribute_value, class| {
@@ -50,9 +50,9 @@ pub fn evaluate<A: PartialEq, C: PartialEq>(
     let num_examples = classes.len();
 
     if num_examples == 0 {
-        Accuracy(0.0)
+        Performance { accuracy: 0.0 }
     } else {
         let num_correct = right_wrong.into_iter().filter(|&o| o == Some(true)).count();
-        Accuracy(num_correct as f64 / num_examples as f64)
+        Performance { accuracy: num_correct as f64 / num_examples as f64 }
     }
 }
